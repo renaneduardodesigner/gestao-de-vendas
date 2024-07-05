@@ -146,7 +146,6 @@ tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-
 .modal .btn {
     background-color: #4e16b6;
     color: white;
@@ -155,7 +154,6 @@ tr:nth-child(even) {
 .modal .btn:hover {
     background-color: #4811a69a;
 }
-
 
 .h2-trafe {
     color: #AF1D96; /* Cor do texto */
