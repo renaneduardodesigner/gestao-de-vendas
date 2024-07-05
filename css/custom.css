@@ -1,0 +1,166 @@
+body {
+    height: 100vh; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    max-width: 100%;
+    position: relative; 
+    overflow: hidden; /* Para evitar barras de rolagem verticais */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(../assents/imagens/27324\ \(1\).jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(70%);
+    z-index: -2; /* Coloca o pseudo-elemento atrás do conteúdo do body e do particles-js */
+}
+
+#particles-js {
+    position: absolute;
+    width: 100vw; /* Alterado para ocupar 100% da largura da tela */
+    height: 100vh; /* Alterado para ocupar 100% da altura da tela */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Coloca o particles-js atrás de todo o conteúdo */
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 90%;
+    width: 100%;
+    max-height: 90vh; /* Limita a altura do container */
+}
+
+/* Estilos adicionais como botões, tabela, etc. permanecem iguais */
+
+#startButton, #saveButton {
+    background-color: #4D0A8B;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 5px; /* Borda arredondada */
+}
+
+#startButton:hover, #saveButton:hover {
+    background-color: #6A0DAD;
+}
+#startButton {
+    background-color: #4D0A8B;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px 35px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Borda arredondada */
+}
+
+@media (max-width: 450px) {
+    .start {
+        margin-top: 130px; 
+    }
+}
+
+
+
+table {
+    margin: 20px auto; /* Margem automática para centralizar horizontalmente */
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 100%; /* Limita a largura máxima da tabela */
+    word-break: break-word; /* Força a quebra de palavras para evitar expansão */
+}
+
+table, th, td {
+    border: 1px solid #8a63d2;
+    max-width: 100%; /* Limita a largura máxima das células */
+    word-break: break-word; /* Força a quebra de palavras para evitar expansão */
+}
+
+
+
+@media (max-width: 500px) {
+    #dataTable {
+        width: 100%;
+        max-width: 100%; /* Largura máxima igual à largura do contêiner pai */
+        margin-top: 10px;
+        border-collapse: collapse; /* Colapso das bordas das células */
+        overflow-x: auto; /* Rolagem horizontal em caso de tabela muito larga */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        background-color: #f2f2f2; /* Fundo roxo */
+        color: #333; /* Cor do texto principal */
+        font-size: 12px; /* Tamanho da fonte da tabela */
+    }
+
+    #dataTable th, #dataTable td {
+        padding: 8px; /* Espaçamento interno das células */
+        text-align: center; /* Alinhamento centralizado do texto */
+        border: 1px solid #ddd; /* Borda das células */
+        font-size: 10px; /* Tamanho da fonte menor para os elementos */
+    }
+
+    #dataTable th {
+        background-color: #673ab7; /* Cor de fundo do cabeçalho */
+        color: #fff; /* Cor do texto no cabeçalho */
+        font-weight: bold; /* Texto em negrito no cabeçalho */
+    }
+
+    .container {
+        padding: 0px; /* Padding do container principal */
+    }
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #6f42c1;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+.modal .btn {
+    background-color: #4e16b6;
+    color: white;
+}
+
+.modal .btn:hover {
+    background-color: #4811a69a;
+}
+
+
+.h2-trafe {
+    color: #4D0A8B; /* Cor do texto */
+    background-color: transparent; /* Fundo transparente */
+    -webkit-text-stroke: 2px #4D0A8B; /* Contorno do texto */
+    text-stroke: 2px #fff; /* Contorno do texto para navegadores que suportam a propriedade */
+    text-shadow: 2px 2px 2px black; /* Sombreamento do texto */
+}

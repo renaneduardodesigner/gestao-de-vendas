@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <meta name="description" content="Site de vendas da loja de celulares Central Do Importados">
+    <meta name="keywords" content="Central Do Importados, loja de celulares, vendas de celulares">
+    <meta name="author" content="Renan">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+
+
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <h4 class="h2-trafe">TRAFEGO DE VENDAS</h4>
+        <button id="startButton" class="btn btn-primary">Começar</button>
+    
+        <div id="questionModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title text-white">Pergunta</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-dark">
+                        <p id="questionText" class="text-white"></p>
+                        <input type="text" id="answerInput" class="form-control bg-primary-subtle">
+                    </div>
+                    <div class="modal-footer bg-dark">
+                        <button type="button" class="btn" id="backButton" style="display: none;">Voltar</button>
+                        <button type="button" class="btn" id="continueButton">Continuar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <table id="dataTable" class="table table-striped mt-4" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Modelo e GB</th>
+                    <th>Valor do Fornecedor</th>
+                    <th>Valor para o Cliente</th>
+                    <th>Lucro</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody">
+            </tbody>
+        </table>
+        <button id="saveButton" class="btn btn-success mt-4" style="display: none;">Salvar Tabela</button>
+    </div>
+    <script>
+
+/*
+* //| Codigo Anterior ->|//
+*/
+   /* $(document).ready(function() {
+        emailjs.init("service_8wg1pka"); // Substitua pelo seu ID de serviço do EmailJS
+    
+        var formData = {};
+    
+        function askQuestion(question) {
+            var answer = prompt(question, ''); // Remove '?' para ajustar a pergunta
+            if (answer === null) {
+                // Usuário clicou em "Cancelar" (Voltar)
+                return false;
+            } else {
+                return answer.trim(); // Retorna a resposta sem espaços extras
+            }
+        }
+    
+        function askQuestions(questions, currentIndex) {
+            if (currentIndex >= questions.length) {
+                // Preenche os dados na tabela
+                $('.inserData').text(formData.data);
+                $('.inserModeloGB').text(`${formData.modelo} ${formData.gb}GB`); // Concatena modelo e GB
+                $('.inserFornecedor').text(`R$ ${formData.fornecedor}`);
+                $('.inserCliente').text(`R$ ${formData.cliente}`);
+                
+                var fornecedorNum = parseFloat(formData.fornecedor.replace(',', '.'));
+                var clienteNum = parseFloat(formData.cliente.replace(',', '.'));
+                var lucro = clienteNum - fornecedorNum;
+                
+                $('.inserLucro').text(`R$ ${lucro.toFixed(2).replace('.', ',')}`);
+    
+                // Remove os estilos do body
+                $('body').css({
+                    'background-image': 'none',
+                    'background-color': 'transparent',
+                    'background-attachment': 'initial',
+                    'background-position': 'initial',
+                    'background-repeat': 'initial',
+                    'background-size': 'initial'
+                });
+    
+                // Mostra a tabela e o botão de salvar
+                $('#tabela-dados').removeClass('d-none');
+                $('.start').animate({
+                    opacity: 'toggle'
+                });
+                $('#salve').removeClass('d-none');
+    
+                return;
+            }
+    
+            var question = questions[currentIndex];
+            var result = askQuestion(question.text.replace('?', ''));
+            if (result) {
+                if (currentIndex === 0) {
+                    // Validar a data (xx/xx/xxxx)
+                    var regex = /^\d{2}\/\d{2}\/\d{4}$/;
+                    if (!regex.test(result)) {
+                        alert('Formato de data inválido. Por favor, use o formato xx/xx/xxxx.');
+                        askQuestions(questions, currentIndex); // Pergunta novamente
+                        return;
+                    }
+                    formData.data = result;
+                } else if (currentIndex === 1) {
+                    formData.modelo = result; // Salva o modelo
+                } else if (currentIndex === 2) {
+                    formData.gb = result; // Salva o GB
+                } else if (currentIndex === 3) {
+                    formData.fornecedor = result.replace(',', '.'); // Salva o fornecedor e substitui ',' por '.'
+                } else if (currentIndex === 4) {
+                    formData.cliente = result.replace(',', '.'); // Salva o cliente e substitui ',' por '.'
+                }
+                askQuestions(questions, currentIndex + 1);
+            } else {
+                if (currentIndex > 0) {
+                    askQuestions(questions, currentIndex - 1);
+                }
+            }
+        }
+    
+        $('.start').on('click', function() {
+            var questions = [
+                { text: 'Qual a data? (xx/xx/xxxx)', field: 'data' },
+                { text: 'Qual o aparelho/modelo?', field: 'modelo' },
+                { text: 'Quantos GB?', field: 'gb' },
+                { text: 'Valor do Fornecedor?', field: 'fornecedor' },
+                { text: 'Valor para o cliente?' }
+            ];
+    
+            askQuestions(questions, 0);
+        });
+    
+        $('#salve').on('click', function() {
+            // Verifica se os campos estão preenchidos
+            var data = $('.inserData').text().trim();
+            var modeloGB = $('.inserModeloGB').text().trim();
+            var fornecedor = $('.inserFornecedor').text().trim();
+            var cliente = $('.inserCliente').text().trim();
+            var lucro = $('.inserLucro').text().trim();
+    
+            if (!data || !modeloGB || !fornecedor || !cliente || !lucro) {
+                alert('Por favor, preencha os dados antes de salvar a tabela.');
+                return;
+            }
+    
+            // Captura os dados da tabela
+            var tableData = [];
+            $('#tabela-dados tbody tr').each(function(row, tr) {
+                tableData[row] = {
+                    data: $(tr).find('td:eq(0)').text(),
+                    modeloGB: $(tr).find('td:eq(1)').text(),
+                    fornecedor: $(tr).find('td:eq(2)').text(),
+                    cliente: $(tr).find('td:eq(3)').text(),
+                    lucro: $(tr).find('td:eq(4)').text()
+                };
+            });
+    
+            // Define a estrutura do documento PDF
+            var docDefinition = {
+                content: [
+                    { text: 'Dados da Tabela', style: 'header' },
+                    {
+                        table: {
+                            body: [
+                                ['Data', 'Modelo e GB', 'Valor Fornecedor', 'Valor Cliente', 'Lucro'],
+                                ...tableData.map(data => [
+                                    data.data, data.modeloGB, data.fornecedor, data.cliente, data.lucro
+                                ])
+                            ]
+                        }
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    }
+                }
+            };
+    
+            // Gera o PDF
+            var pdfDocGenerator = pdfMake.createPdf(docDefinition);
+    
+            // Salva o PDF localmente e envia por email
+            pdfDocGenerator.getBlob(function(blob) {
+                pdfDocGenerator.download('tabela_dados.pdf');
+    
+                var formData = new FormData();
+                formData.append('pdf', blob, 'tabela_dados.pdf');
+    
+                var emailParams = {
+                    to_email: 'renaneduardolvr@gmail.com',
+                    from_name: 'Renan',
+                    message: 'Segue em anexo a tabela de dados.',
+                    attachment: formData
+                };
+    
+                emailjs.send('service_8wg1pka', 'template_id', emailParams)
+                    .then(function(response) {
+                        console.log('E-mail enviado com sucesso!', response);
+                    }, function(error) {
+                        console.error('Erro ao enviar o e-mail', error);
+                    });
+            });
+        });
+    });*/
+
+
+    
+    $(document).ready(function() {
+        var questions = [
+            { text: 'Qual a data? (xx/xx/xxxx)', field: 'data' },
+            { text: 'Qual o aparelho/modelo?', field: 'modelo' },
+            { text: 'Quantos GB?', field: 'gb' },
+            { text: 'Valor do Fornecedor?', field: 'fornecedor' },
+            { text: 'Valor para o cliente?', field: 'cliente' }
+        ];
+        var currentIndex = 0;
+        var formData = {};
+
+
+
+
+    
+        $('#startButton').click(function() {
+            $('#questionModal').modal('show');
+            showQuestion(currentIndex);
+        });
+    
+        $('#continueButton').click(function() {
+            var answer = $('#answerInput').val().trim();
+            if (answer || currentIndex === 4) {
+                formData[questions[currentIndex].field] = answer;
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    showQuestion(currentIndex);
+                } else {
+                    $('#questionModal').modal('hide');
+                    showDataTable();
+                }
+            } else {
+                alert('Por favor, preencha o campo antes de continuar.');
+            }
+        });
+    
+        $('#backButton').click(function() {
+            currentIndex--;
+            showQuestion(currentIndex);
+        });
+    
+        function showQuestion(index) {
+            $('#questionText').text(questions[index].text);
+            $('#answerInput').val('');
+            $('#backButton').toggle(index > 0);
+        }
+    
+        function showDataTable() {
+            $('#dataBody').empty();
+            var fornecedor = parseFloat(formData.fornecedor.replace(',', '.')) || 0;
+            var cliente = parseFloat(formData.cliente.replace(',', '.')) || 0;
+            var lucro = cliente - fornecedor;
+    
+            var newRow = '<tr>' +
+                '<td>' + formData.data + '</td>' +
+                '<td>' + formData.modelo + ' ' + formData.gb + 'GB</td>' +
+                '<td>R$ ' + formData.fornecedor + '</td>' +
+                '<td>R$ ' + formData.cliente + '</td>' +
+                '<td>R$ ' + lucro.toFixed(2).replace('.', ',') + '</td>' +
+                '</tr>';
+    
+            $('#dataBody').append(newRow);
+            $('#dataTable').show();
+            $('#saveButton').show();
+    
+            // Após mostrar a tabela, envie o e-mail com o PDF
+            sendEmailWithPDF(formData.data, formData.modelo, formData.gb, formData.fornecedor, formData.cliente, lucro);
+        }
+    
+        function sendEmailWithPDF(data, modelo, gb, fornecedor, cliente, lucro) {
+            var docDefinition = {
+                content: [
+                    { text: 'Dados da Tabela', style: 'header' },
+                    {
+                        table: {
+                            body: [
+                                ['Data', 'Modelo e GB', 'Valor Fornecedor', 'Valor Cliente', 'Lucro'],
+                                [data, modelo + ' ' + gb + 'GB', 'R$ ' + fornecedor, 'R$ ' + cliente, 'R$ ' + lucro.toFixed(2).replace('.', ',')]
+                            ]
+                        }
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    }
+                }
+            };
+            $('#startButton').animate({
+                opacity: 'toggle'
+            })
+
+            $('body').css({
+                'background-image': 'none',
+                'background-color': 'transparent',
+                'background-attachment': 'initial',
+                'background-position': 'initial',
+                'background-repeat': 'initial',
+                'background-size': 'initial'
+            });
+            $('body::before').css({
+                'background-image': 'none',
+                'background-color': '#000',
+                'background-attachment': 'initial',
+                'background-position': 'initial',
+                'background-repeat': 'initial',
+                'background-size': 'initial'
+            });
+            // Mostra a tabela e o botão de salvar
+     
+            $('.start').animate({
+                opacity: 'toggle'
+            });
+
+
+            pdfMake.createPdf(docDefinition).download('tabela_dados.pdf');
+    
+            var emailParams = {
+                to_email: 'renaneduardolvr@gmail.com',
+                from_name: 'Renan',
+                message: 'Segue em anexo a tabela de dados.',
+                attachment: docDefinition
+            };
+    
+            emailjs.send('9aTzRrFWxWzQuth64KKy7', 'template_id', emailParams)
+                .then(function(response) {
+                    console.log('E-mail enviado com sucesso!', response);
+                })
+                .catch(function(error) {
+                    console.error('Erro ao enviar o e-mail', error);
+                });
+        }
+    });
+
+</script>
+
+<script>
+    particlesJS('particles-js', {
+        "particles": {
+            "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800 // Ajuste a densidade conforme necessário
+                }
+            },
+            "color": {
+                "value": "#ffffff" // Cor das partículas
+            },
+            "shape": {
+                "type": "circle", // Tipo de forma das partículas (pode ser "circle", "edge", "triangle", etc.)
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000" // Cor da borda da forma, se houver
+                },
+                "polygon": {
+                    "nb_sides": 5 // Número de lados para polígonos, se aplicável
+                }
+            },
+            "opacity": {
+                "value": 0.5, // Opacidade das partículas
+                "random": false, // Opacidade aleatória
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 5, // Tamanho das partículas
+                "random": true, // Tamanho aleatório das partículas
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150, // Distância entre as partículas ligadas
+                "color": "#ffffff", // Cor das linhas ligadas entre as partículas
+                "opacity": 0.4, // Opacidade das linhas ligadas
+                "width": 1 // Largura das linhas ligadas
+            },
+            "move": {
+                "enable": true,
+                "speed": 6, // Velocidade de movimento das partículas
+                "direction": "none", // Direção de movimento das partículas ("none", "top", "top-right", etc.)
+                "random": false, // Movimento aleatório das partículas
+                "straight": false, // Movimento em linha reta
+                "out_mode": "out", // Modo de saída das partículas ("out", "bounce")
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "repulse" // Modo de interação ao passar o mouse ("repulse", "grab", "bubble", "push", etc.)
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push" // Modo de interação ao clicar ("push", "remove", "bubble", etc.)
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400, // Distância para o modo "grab"
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200, // Distância para o modo "repulse"
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4 // Número de partículas adicionadas ao clicar
+                },
+                "remove": {
+                    "particles_nb": 2 // Número de partículas removidas ao clicar
+                }
+            }
+        },
+        "retina_detect": true // Detectar retina para partículas de alta resolução
+    });
+    
+</script>
+
+    </body>
+    </html>
