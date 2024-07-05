@@ -52,7 +52,7 @@ body::before {
 /* Estilos adicionais como botões, tabela, etc. permanecem iguais */
 
 #startButton, #saveButton {
-    background-color: #6A0DAD;
+    background-color: #AF1D96;
     color: #FFFFFF;
     border: none;
     padding: 10px 20px;
@@ -63,10 +63,10 @@ body::before {
 }
 
 #startButton:hover, #saveButton:hover {
-    background-color: #8912de;
+    background-color: #d024b3;
 }
 #startButton {
-    background-color: #6A0DAD;
+    background-color: #AF1D96;
     color: #FFFFFF;
     border: none;
     padding: 15px 35px;
