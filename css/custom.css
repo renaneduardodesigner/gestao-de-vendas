@@ -48,7 +48,6 @@ body::before {
     width: 100%;
     max-height: 90vh; /* Limita a altura do container */
 }
-
 /* Estilos adicionais como botões, tabela, etc. permanecem iguais */
 
 #startButton, #saveButton {
@@ -122,7 +121,7 @@ table, th, td {
     }
 
     #dataTable th {
-        background-color: #673ab7; /* Cor de fundo do cabeçalho */
+        background-color: #AF1D96; /* Cor de fundo do cabeçalho */
         color: #fff; /* Cor do texto no cabeçalho */
         font-weight: bold; /* Texto em negrito no cabeçalho */
     }
@@ -138,7 +137,7 @@ th, td {
 }
 
 th {
-    background-color: #6f42c1;
+    background-color: #AF1D96;
     color: white;
 }
 
@@ -147,12 +146,12 @@ tr:nth-child(even) {
 }
 
 .modal .btn {
-    background-color: #4e16b6;
+    background-color: #AF1D96;
     color: white;
 }
 
 .modal .btn:hover {
-    background-color: #4811a69a;
+    background-color: #d024b3;
 }
 
 .h2-trafe {
