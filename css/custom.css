@@ -52,7 +52,7 @@ body::before {
 /* Estilos adicionais como botões, tabela, etc. permanecem iguais */
 
 #startButton, #saveButton {
-    background-color: #4D0A8B;
+    background-color: #6A0DAD;
     color: #FFFFFF;
     border: none;
     padding: 10px 20px;
@@ -63,10 +63,10 @@ body::before {
 }
 
 #startButton:hover, #saveButton:hover {
-    background-color: #6A0DAD;
+    background-color: #8912de;
 }
 #startButton {
-    background-color: #4D0A8B;
+    background-color: #6A0DAD;
     color: #FFFFFF;
     border: none;
     padding: 15px 35px;
@@ -158,9 +158,9 @@ tr:nth-child(even) {
 
 
 .h2-trafe {
-    color: #4D0A8B; /* Cor do texto */
+    color: #AF1D96; /* Cor do texto */
     background-color: transparent; /* Fundo transparente */
-    -webkit-text-stroke: 2px #4D0A8B; /* Contorno do texto */
+    -webkit-text-stroke: 2px #AF1D96; /* Contorno do texto */
     text-stroke: 2px #fff; /* Contorno do texto para navegadores que suportam a propriedade */
     text-shadow: 2px 2px 2px black; /* Sombreamento do texto */
 }
