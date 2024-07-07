@@ -33,14 +33,14 @@ body::before {
 }
 
 .img-fluid {
-    max-width: 100%;
-    height: 100vh;
+    position: absolute;
 }
 
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     flex-direction: column;
     padding: 20px;
     border-radius: 10px;
@@ -100,7 +100,7 @@ table, th, td {
 
 
 
-@media (max-width: 500px) {
+@media (max-width: 944px) {
     #dataTable {
         width: 100%;
         max-width: 100%; /* Largura máxima igual à largura do contêiner pai */
@@ -110,14 +110,14 @@ table, th, td {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
         background-color: #f2f2f2; /* Fundo roxo */
         color: #333; /* Cor do texto principal */
-        font-size: 12px; /* Tamanho da fonte da tabela */
+        font-size: 8px; /* Tamanho da fonte da tabela */
     }
 
     #dataTable th, #dataTable td {
-        padding: 8px; /* Espaçamento interno das células */
+        padding: 4px; /* Espaçamento interno das células */
         text-align: center; /* Alinhamento centralizado do texto */
         border: 1px solid #ddd; /* Borda das células */
-        font-size: 10px; /* Tamanho da fonte menor para os elementos */
+        font-size: 8px; /* Tamanho da fonte menor para os elementos */
     }
 
     #dataTable th {
@@ -130,7 +130,36 @@ table, th, td {
         padding: 0px; /* Padding do container principal */
     }
 }
+@media (max-width: 413px) { 
+    #dataTable {
+        width: 100%;
+        max-width: 100%; /* Largura máxima igual à largura do contêiner pai */
+        margin-top: 10px;
+        border-collapse: collapse; /* Colapso das bordas das células */
+        overflow-x: auto; /* Rolagem horizontal em caso de tabela muito larga */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        background-color: #f2f2f2; /* Fundo roxo */
+        color: #333; /* Cor do texto principal */
+        font-size: 7px; /* Tamanho da fonte da tabela */
+    }
 
+    #dataTable th, #dataTable td {
+        padding: 1px; /* Espaçamento interno das células */
+        text-align: center; /* Alinhamento centralizado do texto */
+        border: 1px solid #ddd; /* Borda das células */
+        font-size: 7px; /* Tamanho da fonte menor para os elementos */
+    }
+
+    #dataTable th {
+        background-color: #AF1D96; /* Cor de fundo do cabeçalho */
+        color: #fff; /* Cor do texto no cabeçalho */
+        font-weight: bold; /* Texto em negrito no cabeçalho */
+    }
+
+    .container {
+        padding: 0px; /* Padding do container principal */
+    }
+}
 th, td {
     padding: 10px;
     text-align: center;

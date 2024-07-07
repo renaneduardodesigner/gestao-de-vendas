@@ -26,13 +26,12 @@
     <meta name="twitter:url" content="https://renaneduardodesigner.github.io/gestao-de-vendas/">
     <!-- Additional Meta Tags -->
     <meta name="robots" content="index, follow">
-    <!-- Example of a viewport meta tag for responsiveness -->
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 </head>
 <body>
     <div id="particles-js"></div>
 
     <div class="container">
+        <img src="assents/imagens/logo_central_do_importados_2_-removebg-preview.png" alt="" class="img-fluid d-none">
         <h4 class="h2-trafe">TRAFEGO DE VENDAS</h4>
         <button id="startButton" class="btn btn-primary">Começar</button>
     
@@ -48,6 +47,7 @@
                     <div class="modal-body bg-dark">
                         <p id="questionText" class="text-white"></p>
                         <input type="text" id="answerInput" class="form-control text-capitalize bg-primary-subtle">
+                        <select id="answerSelect" class="form-control text-capitalize bg-primary-subtle" style="display: none;"></select>
                     </div>
                     <div class="modal-footer bg-dark">
                         <button type="button" class="btn" id="backButton" style="display: none;">Voltar</button>
@@ -62,6 +62,11 @@
                 <tr>
                     <th>Data</th>
                     <th>Modelo e GB</th>
+                    <th>Tipo</th>
+                    <th>IMEI 1</th>
+                    <th>IMEI 2</th>
+                    <th>Marca</th>
+                    <th>SD Bateria</th>
                     <th>Valor do Fornecedor</th>
                     <th>Valor para o Cliente</th>
                     <th>Lucro</th>
@@ -81,191 +86,22 @@
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-/*
-*  // |Codigo Anterior ->| //
-*/
-   /* $(document).ready(function() {
-        emailjs.init("service_8wg1pka"); // Substitua pelo seu ID de serviço do EmailJS
-    
-        var formData = {};
-    
-        function askQuestion(question) {
-            var answer = prompt(question, ''); // Remove '?' para ajustar a pergunta
-            if (answer === null) {
-                // Usuário clicou em "Cancelar" (Voltar)
-                return false;
-            } else {
-                return answer.trim(); // Retorna a resposta sem espaços extras
-            }
-        }
-    
-        function askQuestions(questions, currentIndex) {
-            if (currentIndex >= questions.length) {
-                // Preenche os dados na tabela
-                $('.inserData').text(formData.data);
-                $('.inserModeloGB').text(`${formData.modelo} ${formData.gb}GB`); // Concatena modelo e GB
-                $('.inserFornecedor').text(`R$ ${formData.fornecedor}`);
-                $('.inserCliente').text(`R$ ${formData.cliente}`);
-                
-                var fornecedorNum = parseFloat(formData.fornecedor.replace(',', '.'));
-                var clienteNum = parseFloat(formData.cliente.replace(',', '.'));
-                var lucro = clienteNum - fornecedorNum;
-                
-                $('.inserLucro').text(`R$ ${lucro.toFixed(2).replace('.', ',')}`);
-    
-                // Remove os estilos do body
-                $('body').css({
-                    'background-image': 'none',
-                    'background-color': 'transparent',
-                    'background-attachment': 'initial',
-                    'background-position': 'initial',
-                    'background-repeat': 'initial',
-                    'background-size': 'initial'
-                });
-    
-                // Mostra a tabela e o botão de salvar
-                $('#tabela-dados').removeClass('d-none');
-                $('.start').animate({
-                    opacity: 'toggle'
-                });
-                $('#salve').removeClass('d-none');
-    
-                return;
-            }
-    
-            var question = questions[currentIndex];
-            var result = askQuestion(question.text.replace('?', ''));
-            if (result) {
-                if (currentIndex === 0) {
-                    // Validar a data (xx/xx/xxxx)
-                    var regex = /^\d{2}\/\d{2}\/\d{4}$/;
-                    if (!regex.test(result)) {
-                        alert('Formato de data inválido. Por favor, use o formato xx/xx/xxxx.');
-                        askQuestions(questions, currentIndex); // Pergunta novamente
-                        return;
-                    }
-                    formData.data = result;
-                } else if (currentIndex === 1) {
-                    formData.modelo = result; // Salva o modelo
-                } else if (currentIndex === 2) {
-                    formData.gb = result; // Salva o GB
-                } else if (currentIndex === 3) {
-                    formData.fornecedor = result.replace(',', '.'); // Salva o fornecedor e substitui ',' por '.'
-                } else if (currentIndex === 4) {
-                    formData.cliente = result.replace(',', '.'); // Salva o cliente e substitui ',' por '.'
-                }
-                askQuestions(questions, currentIndex + 1);
-            } else {
-                if (currentIndex > 0) {
-                    askQuestions(questions, currentIndex - 1);
-                }
-            }
-        }
-    
-        $('.start').on('click', function() {
-            var questions = [
-                { text: 'Qual a data? (xx/xx/xxxx)', field: 'data' },
-                { text: 'Qual o aparelho/modelo?', field: 'modelo' },
-                { text: 'Quantos GB?', field: 'gb' },
-                { text: 'Valor do Fornecedor?', field: 'fornecedor' },
-                { text: 'Valor para o cliente?' }
-            ];
-    
-            askQuestions(questions, 0);
-        });
-    
-        $('#salve').on('click', function() {
-            // Verifica se os campos estão preenchidos
-            var data = $('.inserData').text().trim();
-            var modeloGB = $('.inserModeloGB').text().trim();
-            var fornecedor = $('.inserFornecedor').text().trim();
-            var cliente = $('.inserCliente').text().trim();
-            var lucro = $('.inserLucro').text().trim();
-    
-            if (!data || !modeloGB || !fornecedor || !cliente || !lucro) {
-                alert('Por favor, preencha os dados antes de salvar a tabela.');
-                return;
-            }
-    
-            // Captura os dados da tabela
-            var tableData = [];
-            $('#tabela-dados tbody tr').each(function(row, tr) {
-                tableData[row] = {
-                    data: $(tr).find('td:eq(0)').text(),
-                    modeloGB: $(tr).find('td:eq(1)').text(),
-                    fornecedor: $(tr).find('td:eq(2)').text(),
-                    cliente: $(tr).find('td:eq(3)').text(),
-                    lucro: $(tr).find('td:eq(4)').text()
-                };
-            });
-    
-            // Define a estrutura do documento PDF
-            var docDefinition = {
-                content: [
-                    { text: 'Dados da Tabela', style: 'header' },
-                    {
-                        table: {
-                            body: [
-                                ['Data', 'Modelo e GB', 'Valor Fornecedor', 'Valor Cliente', 'Lucro'],
-                                ...tableData.map(data => [
-                                    data.data, data.modeloGB, data.fornecedor, data.cliente, data.lucro
-                                ])
-                            ]
-                        }
-                    }
-                ],
-                styles: {
-                    header: {
-                        fontSize: 18,
-                        bold: true,
-                        margin: [0, 0, 0, 10]
-                    }
-                }
-            };
-    
-            // Gera o PDF
-            var pdfDocGenerator = pdfMake.createPdf(docDefinition);
-    
-            // Salva o PDF localmente e envia por email
-            pdfDocGenerator.getBlob(function(blob) {
-                pdfDocGenerator.download('tabela_dados.pdf');
-    
-                var formData = new FormData();
-                formData.append('pdf', blob, 'tabela_dados.pdf');
-    
-                var emailParams = {
-                    to_email: 'renaneduardolvr@gmail.com',
-                    from_name: 'Renan',
-                    message: 'Segue em anexo a tabela de dados.',
-                    attachment: formData
-                };
-    
-                emailjs.send('service_8wg1pka', 'template_id', emailParams)
-                    .then(function(response) {
-                        console.log('E-mail enviado com sucesso!', response);
-                    }, function(error) {
-                        console.error('Erro ao enviar o e-mail', error);
-                    });
-            });
-        });
-    });*/
-
-
     
     $(document).ready(function() {
         var questions = [
-            { text: 'Qual a data? (xx/xx/xxxx)', field: 'data' },
-            { text: 'Qual o aparelho/modelo?', field: 'modelo' },
-            { text: 'Quantos GB?', field: 'gb' },
-            { text: 'Valor do Fornecedor?', field: 'fornecedor' },
-            { text: 'Valor para o cliente?', field: 'cliente' }
+            { text: 'Qual a data? (xx/xx/xxxx)', field: 'data', type: 'text' },
+            { text: 'Qual o aparelho/modelo?', field: 'modelo', type: 'text' },
+            { text: 'Quantos GB?', field: 'gb', type: 'text' },
+            { text: 'Qual o tipo?', field: 'tipo', type: 'select', options: ['Lacrado', 'Seminovo'] },
+            { text: 'Qual a marca?', field: 'marca', type: 'select', options: ['Apple', 'Xiaomi', 'Realme'] },
+            { text: 'Qual o IMEI 1?', field: 'imei1', type: 'text' },
+            { text: 'Qual o IMEI 2?', field: 'imei2', type: 'text' },
+            { text: 'Qual a saúde da bateria?', field: 'sdBateria', type: 'text' },
+            { text: 'Valor do Fornecedor?', field: 'fornecedor', type: 'text' },
+            { text: 'Valor para o cliente?', field: 'cliente', type: 'text' }
         ];
         var currentIndex = 0;
         var formData = {};
-
-
-
-
     
         $('#startButton').click(function() {
             $('#questionModal').modal('show');
@@ -273,8 +109,8 @@
         });
     
         $('#continueButton').click(function() {
-            var answer = $('#answerInput').val().trim();
-            if (answer || currentIndex === 4) {
+            var answer = questions[currentIndex].type === 'select' ? $('#answerSelect').val() : $('#answerInput').val().trim();
+            if (answer) {
                 formData[questions[currentIndex].field] = answer;
                 currentIndex++;
                 if (currentIndex < questions.length) {
@@ -295,7 +131,16 @@
     
         function showQuestion(index) {
             $('#questionText').text(questions[index].text);
-            $('#answerInput').val('');
+            if (questions[index].type === 'select') {
+                $('#answerInput').hide();
+                $('#answerSelect').empty().append(new Option('Selecionar', '')).show();
+                questions[index].options.forEach(function(option) {
+                    $('#answerSelect').append(new Option(option, option));
+                });
+            } else {
+                $('#answerSelect').hide();
+                $('#answerInput').val('').show();
+            }
             $('#backButton').toggle(index > 0);
         }
     
@@ -308,6 +153,11 @@
             var newRow = '<tr>' +
                 '<td>' + formData.data + '</td>' +
                 '<td>' + formData.modelo + ' ' + formData.gb + 'GB</td>' +
+                '<td>' + formData.tipo + '</td>' +
+                '<td>' + formData.imei1 + '</td>' +
+                '<td>' + formData.imei2 + '</td>' +
+                '<td>' + formData.marca + '</td>' +
+                '<td>' + formData.sdBateria + '</td>' +
                 '<td>R$ ' + formData.fornecedor + '</td>' +
                 '<td>R$ ' + formData.cliente + '</td>' +
                 '<td>R$ ' + lucro.toFixed(2).replace('.', ',') + '</td>' +
@@ -318,19 +168,28 @@
             $('#saveButton').show();
     
             // Após mostrar a tabela, envie o e-mail com o PDF
-            sendEmailWithPDF(formData.data, formData.modelo, formData.gb, formData.fornecedor, formData.cliente, lucro);
+            sendEmailWithPDF(formData.data,formData.modelo,formData.tipo,formData.imei1,formData.imei2,formData.marca,formData.sdBateria,formData.fornecedor,formData.cliente,formData.lucro);
         }
     
-        function sendEmailWithPDF(data, modelo, gb, fornecedor, cliente, lucro) {
+        function sendEmailWithPDF() {
+            var tableBody = [
+                ['Data', 'Modelo e GB', 'Tipo', 'IMEI 1', 'IMEI 2', 'Marca', 'SD Bateria', 'Valor do Fornecedor', 'Valor para o Cliente', 'Lucro']
+            ];
+
+            $('#dataTable tbody tr').each(function() {
+                var row = [];
+                $(this).find('td').each(function() {
+                    row.push($(this).text());
+                });
+                tableBody.push(row);
+            });
+
             var docDefinition = {
                 content: [
                     { text: 'Dados da Tabela', style: 'header' },
                     {
                         table: {
-                            body: [
-                                ['Data', 'Modelo e GB', 'Valor Fornecedor', 'Valor Cliente', 'Lucro'],
-                                [data, modelo + ' ' + gb + 'GB', 'R$ ' + fornecedor, 'R$ ' + cliente, 'R$ ' + lucro.toFixed(2).replace('.', ',')]
-                            ]
+                            body: tableBody
                         }
                     }
                 ],
@@ -342,9 +201,10 @@
                     }
                 }
             };
+
             $('#startButton').animate({
                 opacity: 'toggle'
-            })
+            });
 
             $('body').css({
                 'background-image': 'none',
@@ -362,22 +222,22 @@
                 'background-repeat': 'initial',
                 'background-size': 'initial'
             });
-            // Mostra a tabela e o botão de salvar
-     
+
             $('.start').animate({
                 opacity: 'toggle'
             });
 
 
+
             pdfMake.createPdf(docDefinition).download('tabela_dados.pdf');
-    
+
             var emailParams = {
                 to_email: 'renaneduardolvr@gmail.com',
                 from_name: 'Renan',
                 message: 'Segue em anexo a tabela de dados.',
                 attachment: docDefinition
             };
-    
+
             emailjs.send('9aTzRrFWxWzQuth64KKy7', 'template_id', emailParams)
                 .then(function(response) {
                     console.log('E-mail enviado com sucesso!', response);
